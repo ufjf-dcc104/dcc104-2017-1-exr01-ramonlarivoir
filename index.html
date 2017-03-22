@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>DCC104 - Exemplo 01</title>
+    <script src="Sprite.js" charset="utf-8"></script>
   </head>
   <body>
     <h1>DCC104 - Exemplo 01</h1>
@@ -11,50 +12,116 @@
       var eCanvas = document.getElementsByTagName("canvas")[0];
       var ctx = eCanvas.getContext("2d");
 
-
-
-      var azul = {
-        x: 10,
-        y: 50
-      };
-
+      var azul = new Sprite();
+      var fuel = 100;
+      var acelerandoX = false;
+      var acelerandoY = false;
+      var vermelho = new Sprite();
+      vermelho.x = 150;
+      vermelho.y = 100;
       var fps = 120;
       var atual = new Date();
       var anterior = new Date();
       var dt = 1/fps;
 
-      desenha();
+      desenhar();
 
 
-      function desenha() {
-        requestAnimationFrame(desenha);
+      function desenhar() {
+        requestAnimationFrame(desenhar);
         atual = new Date();
         dt = (atual - anterior)/1000;
         ctx.clearRect(0,0,eCanvas.width, eCanvas.height);
+        ctx.strokeRect(0,0,eCanvas.width, eCanvas.height);
         ctx.fillStyle = "darkgreen";
-        ctx.fillText("dt: "+dt+" fps: "+Math.floor(1/dt), 10, 10);
-        azul.x += 30*dt;
-        azul.y += 10*dt;
-        desenhaAzul(ctx);
-        desenhaVermelho(ctx);
+        ctx.fillText("dt: "+dt+" fps: "+Math.floor(1/dt) + " Fuel: " + fuel, 10, 10);
+
+        ctx.fillStyle = "green";
+        ctx.fillRect(20, 20, fuel, 5);
+        ctx.strokeRect(20,20,fuel,5);
+
+        if(acelerandoX) {
+          fuel = fuel - 5*dt;
+        }
+
+        if(acelerandoY) {
+          fuel = fuel - 15*dt;
+        }
+
+        azul.mover(dt);
+        azul.desenhar(ctx);
+
+        vermelho.mover(dt);
+        vermelho.desenhar(ctx);
+        vermelho.color = "red";
+
+        if(azul.y > 150) {
+          azul.y = 0;
+          azul.vy = 0;
+          azul.ay = 0;
+          azul.x = 150;
+          fuel = 100;
+        }
 
         anterior = atual;
       }
 
 
-      function desenhaAzul(ctx) {
-        ctx.fillStyle = "Blue";
-        ctx.fillRect(azul.x, azul.y, 15, 15);
-        ctx.lineWidth = 2;
-        ctx.strokeRect(azul.x, azul.y, 15, 15);
-      }
+      addEventListener("keydown", function(e) {
+        switch (e.keyCode) {
+         //if(fuel <= 0) return;
+        /*  case 32:
+            azul.vy =- 80;
+            break; */
+          case 37:
+            azul.ax =- 100;
+            acelerandoX = true;
+            break;
+          case 38:
+            azul.ay =- 100;
+            acelerandoY = true;
+            break;
+          case 39:
+            azul.ax =+ 100;
+            acelerandoX = true;
+            break;
+          case 40:
+            azul.ay =+ 100;
+            acelerandoY = true;
+            break;
 
-      function desenhaVermelho(ctx) {
-        ctx.fillStyle = "Red";
-        ctx.fillRect(120, 50, 15, 15);
-        ctx.lineWidth = 2;
-        ctx.strokeRect(120, 50, 15, 15);
-      }
+          default:
+
+        }
+      })
+
+      addEventListener("keyup", function(e) {
+        switch (e.keyCode) {
+          case 37:
+            azul.ax =- 0;
+            acelerandoX = false;
+            break;
+          case 38:
+            azul.ay =- 0;
+            acelerandoY = false;
+            break;
+          case 39:
+            azul.ax =+ 0;
+            acelerandoX = false;
+            break;
+          case 40:
+            azul.ay =+ 0;
+            acelerandoY = false;
+            break;
+
+          default:
+
+        }
+      })
+
+
+
+
 
     </script>
   </body>
