@@ -38,16 +38,18 @@
         ctx.fillStyle = "darkgreen";
         ctx.fillText("dt: "+dt+" fps: "+Math.floor(1/dt) + " Fuel: " + fuel, 10, 10);
 
-        
+        level.perseguir(azul, dt);
+		  
         azul.mover(dt);
-        azul.desenhar(ctx);
+        level.mover(dt);
 		  
 		  level.colidiuCom(azul, 
 			function(inimigo, alvo) {
 			  	inimigo.color = "red";
 		  });
 
-        level.mover(dt);
+        
+		  azul.desenhar(ctx);
         level.desenhar(ctx);
         
 

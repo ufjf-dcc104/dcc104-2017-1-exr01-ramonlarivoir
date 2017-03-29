@@ -34,3 +34,8 @@ Sprite.prototype.colidiuCom = function(alvo) {
 	
 	return true;
 }
+
+Sprite.prototype.perseguir = function(alvo, dt) {
+	this.ax = dt*(alvo.x - this.x)*10 - 1*this.vx;
+	this.ay = dt*(alvo.y - this.y)*10 - 1*this.vy;
+}
