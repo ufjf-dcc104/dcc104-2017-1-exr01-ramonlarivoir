@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <title>DCC104 - Exemplo 01</title>
     <script src="Sprite.js" charset="utf-8"></script>
+    <script src="Level.js" charset="utf-8"></script>
+    
   </head>
   <body>
     <h1>DCC104 - Exemplo 01</h1>
@@ -12,17 +14,17 @@
       var eCanvas = document.getElementsByTagName("canvas")[0];
       var ctx = eCanvas.getContext("2d");
 
-      var azul = new Sprite();
-      var fuel = 100;
-      var acelerandoX = false;
-      var acelerandoY = false;
-      var vermelho = new Sprite();
-      vermelho.x = 150;
-      vermelho.y = 100;
-      var fps = 120;
+      
+		var fps = 120;
       var atual = new Date();
       var anterior = new Date();
       var dt = 1/fps;
+		
+		var azul = new Sprite();
+      var fuel = 100;
+		azul.g = 0;
+      var level = new Level();
+        level.init();    
 
       desenhar();
 
@@ -36,24 +38,18 @@
         ctx.fillStyle = "darkgreen";
         ctx.fillText("dt: "+dt+" fps: "+Math.floor(1/dt) + " Fuel: " + fuel, 10, 10);
 
-        ctx.fillStyle = "green";
-        ctx.fillRect(20, 20, fuel, 5);
-        ctx.strokeRect(20,20,fuel,5);
-
-        if(acelerandoX) {
-          fuel = fuel - 5*dt;
-        }
-
-        if(acelerandoY) {
-          fuel = fuel - 15*dt;
-        }
-
+        
         azul.mover(dt);
         azul.desenhar(ctx);
+		  
+		  level.colidiuCom(azul, 
+			function(inimigo, alvo) {
+			  	inimigo.color = "red";
+		  });
 
-        vermelho.mover(dt);
-        vermelho.desenhar(ctx);
-        vermelho.color = "red";
+        level.mover(dt);
+        level.desenhar(ctx);
+        
 
         if(azul.y > 150) {
           azul.y = 0;
@@ -75,19 +71,15 @@
             break; */
           case 37:
             azul.ax =- 100;
-            acelerandoX = true;
             break;
           case 38:
             azul.ay =- 100;
-            acelerandoY = true;
             break;
           case 39:
             azul.ax =+ 100;
-            acelerandoX = true;
             break;
           case 40:
             azul.ay =+ 100;
-            acelerandoY = true;
             break;
 
           default:
@@ -99,19 +91,15 @@
         switch (e.keyCode) {
           case 37:
             azul.ax =- 0;
-            acelerandoX = false;
             break;
           case 38:
             azul.ay =- 0;
-            acelerandoY = false;
             break;
           case 39:
             azul.ax =+ 0;
-            acelerandoX = false;
             break;
           case 40:
             azul.ay =+ 0;
-            acelerandoY = false;
             break;
 
           default:
