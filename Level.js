@@ -2,6 +2,7 @@ function Level (){
   this.sprites = [];
   this.shots = [];
   this.inimigos = 3;
+	
 }
 
 Level.prototype.init = function () {
@@ -9,10 +10,11 @@ Level.prototype.init = function () {
     var inimigo = new Sprite();
     inimigo.x = 120+20*i;
     inimigo.y = 10;
-    inimigo.width = 10+i*5;
-    inimigo.height = 10+i*5;
+    inimigo.width = 32;
+    inimigo.height = 32;
     inimigo.vang = 300*i;
     inimigo.am = 00;
+	inimigo.imgKey = "enemy";
     this.sprites.push(inimigo);
   }
 };
@@ -60,6 +62,15 @@ Level.prototype.desenhar = function (ctx) {
     }
 };
 
+Level.prototype.desenharImg = function (ctx) {
+    for (var i = 0; i < this.sprites.length; i++) {
+      this.sprites[i].desenharImg(ctx, this.imageLib.images[this.sprites[i].imgKey]);
+    }
+    for (var i = 0; i < this.shots.length; i++) {
+      this.shots[i].desenharImg(ctx, this.imageLib.images[this.shots[i].imgKey]);
+    }
+};
+
 Level.prototype.colidiuCom = function (alvo, resolveColisao) {
     for (var i = 0; i < this.sprites.length; i++) {
       if(this.sprites[i].colidiuCom(alvo)){
@@ -86,8 +97,9 @@ Level.prototype.fire = function (alvo){
   tiro.y = alvo.y;
   tiro.angle = alvo.angle;
   tiro.am = 100;
-  tiro.width = 5;
-  tiro.height = 5;
+  tiro.width = 10;
+  tiro.height = 20;
+	tiro.imgKey = "shot";
   this.shots.push(tiro);
   alvo.cooldown = 1;
 }

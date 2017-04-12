@@ -5,6 +5,7 @@
     <title>DCC104 - Exemplo 02</title>
     <script src="Sprite.js" charset="utf-8"></script>
     <script src="Level.js" charset="utf-8"></script>
+    <script src="ImageLoader.js" charset="utf-8"></script>
   </head>
   <body>
     <h1>DCC104 - Exemplo 02</h1>
@@ -13,8 +14,11 @@
       var eCanvas = document.getElementsByTagName("canvas")[0];
       var ctx = eCanvas.getContext("2d");
 		
-		var imgPC = new Image();
-		imgPC.src = "img/player_ship.png";
+		var imageLib = new ImageLoader();
+		imageLib.load('pc', "img/player_ship.png");
+		imageLib.load('enemy', "img/enemy_1.png");
+		imageLib.load('shot', "img/shot.png");
+		imageLib.load('sheet', "img/boss1.png");
 
 
 
@@ -30,6 +34,7 @@
       var acelerandoX = false;
       var acelerandoY = false;
       var level = new Level();
+		level.imageLib = imageLib; 
       level.init();
 
       desenha();
@@ -56,11 +61,12 @@
             inimigo.color = "red";
           }
         );
-
-        azul.desenharImg(ctx, imgPC);
-        level.desenhar(ctx);
+		  
+		
+		 imageLib.drawSprite(ctx, "sheet", 0, 0, 128, 102, 100, 100, 50, 50)
+        azul.desenharImg(ctx, imageLib.images['pc']);
+        level.desenharImg(ctx);
         level.colidiuComTiros();
-		  ctx.drawImage(imgPC, 150, 125);
 
         anterior = atual;
       }

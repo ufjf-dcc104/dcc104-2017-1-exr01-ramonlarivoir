@@ -7,8 +7,8 @@ function Sprite(){
   this.ax = 0;
   this.ay = 0;
   this.am = 0;
-  this.width = 15;
-  this.height = 15;
+  this.width = 32;
+  this.height = 32;
   this.angle = 0;
   this.vang = 0;
   this.color = "blue";
