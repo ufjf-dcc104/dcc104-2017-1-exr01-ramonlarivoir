@@ -2,117 +2,115 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>DCC104 - Exemplo 01</title>
+    <title>DCC104 - Exemplo 02</title>
     <script src="Sprite.js" charset="utf-8"></script>
     <script src="Level.js" charset="utf-8"></script>
-    
   </head>
   <body>
-    <h1>DCC104 - Exemplo 01</h1>
+    <h1>DCC104 - Exemplo 02</h1>
     <canvas></canvas>
     <script>
       var eCanvas = document.getElementsByTagName("canvas")[0];
       var ctx = eCanvas.getContext("2d");
+		
+		var imgPC = new Image();
+		imgPC.src = "img/player_ship.png";
 
-      
-		var fps = 120;
+
+
+      var fps = 120;
       var atual = new Date();
       var anterior = new Date();
       var dt = 1/fps;
-		
-		var azul = new Sprite();
+
+      var azul = new Sprite();
+      azul.x = 40;
+      azul.y = 75;
       var fuel = 100;
-		azul.g = 0;
+      var acelerandoX = false;
+      var acelerandoY = false;
       var level = new Level();
-        level.init();    
+      level.init();
 
-      desenhar();
+      desenha();
 
 
-      function desenhar() {
-        requestAnimationFrame(desenhar);
+
+
+      function desenha(){
+        requestAnimationFrame(desenha);
         atual = new Date();
         dt = (atual - anterior)/1000;
-        ctx.clearRect(0,0,eCanvas.width, eCanvas.height);
-        ctx.strokeRect(0,0,eCanvas.width, eCanvas.height);
+        ctx.clearRect(0,0,eCanvas.width, eCanvas.height)
+        ctx.strokeRect(0,0,eCanvas.width, eCanvas.height)
         ctx.fillStyle = "darkgreen";
-        ctx.fillText("dt: "+dt+" fps: "+Math.floor(1/dt) + " Fuel: " + fuel, 10, 10);
+        ctx.fillText("dt: "+dt+" fps:"+Math.floor(1/dt), 10, 10);
 
-        level.perseguir(azul, dt);
-		  
-        azul.mover(dt);
-        level.mover(dt);
-		  
-		  level.colidiuCom(azul, 
-			function(inimigo, alvo) {
-			  	inimigo.color = "red";
-		  });
+        level.perseguirAng(azul,dt);
 
-        
-		  azul.desenhar(ctx);
+        azul.moverAng(dt);
+        level.moverAng(dt);
+
+        level.colidiuCom(azul,
+          function(inimigo, alvo){
+            inimigo.color = "red";
+          }
+        );
+
+        azul.desenharImg(ctx, imgPC);
         level.desenhar(ctx);
-        
-
-        if(azul.y > 150) {
-          azul.y = 0;
-          azul.vy = 0;
-          azul.ay = 0;
-          azul.x = 150;
-          fuel = 100;
-        }
+        level.colidiuComTiros();
+		  ctx.drawImage(imgPC, 150, 125);
 
         anterior = atual;
       }
 
-
-      addEventListener("keydown", function(e) {
+      addEventListener("keydown", function(e){
+        if(fuel<=0) return;
         switch (e.keyCode) {
-         //if(fuel <= 0) return;
-        /*  case 32:
-            azul.vy =- 80;
-            break; */
+          case 32:
+            level.fire(azul);
+            break;
+
           case 37:
-            azul.ax =- 100;
+            azul.vang = -100;
             break;
           case 38:
-            azul.ay =- 100;
+            azul.am = 50;
             break;
           case 39:
-            azul.ax =+ 100;
+            azul.vang = +100;
             break;
           case 40:
-            azul.ay =+ 100;
+            azul.am = -50;
             break;
-
           default:
 
         }
-      })
-
-      addEventListener("keyup", function(e) {
+      });
+      addEventListener("keyup", function(e){
         switch (e.keyCode) {
           case 37:
-            azul.ax =- 0;
+            azul.vang = 0;
             break;
           case 38:
-            azul.ay =- 0;
+            azul.am = 0;
             break;
           case 39:
-            azul.ax =+ 0;
+            azul.vang = 0;
             break;
           case 40:
-            azul.ay =+ 0;
+            azul.am = 0;
             break;
-
           default:
 
         }
-      })
-
-
-
-
+      });
 
     </script>
   </body>
+
+
+
+
 </html>
